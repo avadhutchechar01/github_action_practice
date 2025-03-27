@@ -1,14 +1,21 @@
-on:
-  # Trigger the workflow on push or pull request,
-  # but only for the main branch
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
-  # Also trigger on page_build, as well as release created events
-  page_build:
-  release:
-    types: # This configuration doesn't affect the page_build event above
-      - created
+name: Go
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        go-version: [ '1.19', '1.20', '1.21.x' ]
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Go ${{ matrix.go-version }}
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ matrix.go-version }}
+      # You can test your matrix by printing the current Go version
+      - name: Display Go version
+        run: go version
